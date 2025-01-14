@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Array Processing</title>
+    <!-- 引入 Bootstrap CSS 从国内网站 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-3">
+        请输入LotIds:<input type="text" id="lotIdList" name="lotId list" class="form-control" placeholder="输入 Lot ID 列表">
+        <button onclick="calculate()" class="btn btn-primary mt-3">计算</button>
+        
+        快速输入:
+        <a href="#" class="lotIdLink">1-9,5,10,12,19</a>;
+        <a href="#" class="lotIdLink">1,3,6,1-9,25,24</a>;
+        <a href="#" class="lotIdLink">20-25,9,10,19-21</a>;
+        <a href="#" class="lotIdLink">3,5,7,9</a>
+
+
+        <div id="resultDiv" class="alert alert-info mt-3" role="alert">
+            结果将显示在此处
+        </div>
+
+        <blockquote id="resultDiv" class="alert alert-info mt-3" role="alert">
+        <pre>
+            function processArray(arr) {
+                // 第一步：将输入的字符串数组转换为数字数组
+                let numArr = [];
+                arr.forEach(str => {
+                    if (str.includes('-')) {
+                        let [start, end] = str.split('-').map(Number);
+                        for (let i = start; i <= end; i++) {
+                            numArr.push(i);
+                        }
+                    } else {
+                        numArr.push(parseInt(str));
+                    }
+                });
+    
+                // 第二步：去除重复并按从小到大排序
+                numArr = Array.from(new Set(numArr)).sort((a, b) => a - b);
+    
+                // 第三步：合并连续数字
+                let result = [];
+                let start = numArr[0];
+                let end = numArr[0];
+                for (let i = 1; i < numArr.length; i++) {
+                    if (numArr[i] === end + 1) {
+                        end = numArr[i];
+                    } else {
+                        if (start === end) {
+                            result.push(start.toString());
+                        } else {
+                            result.push(`${start}-${end}`);
+                        }
+                        start = numArr[i];
+                        end = numArr[i];
+                    }
+                }
+                if (start === end) {
+                    result.push(start.toString());
+                } else {
+                    result.push(`${start}-${end}`);
+                }
+    
+                return result;
+            }
+        </pre>
+        </blockquote>
+
+    </div>
+    <script>
+
+
+
+
+        function processArray(arr) {
+            // 第一步：将输入的字符串数组转换为数字数组
+            let numArr = [];
+            arr.forEach(str => {
+                if (str.includes('-')) {
+                    let [start, end] = str.split('-').map(Number);
+                    for (let i = start; i <= end; i++) {
+                        numArr.push(i);
+                    }
+                } else {
+                    numArr.push(parseInt(str));
+                }
+            });
+
+            // 第二步：去除重复并按从小到大排序
+            numArr = Array.from(new Set(numArr)).sort((a, b) => a - b);
+
+            // 第三步：合并连续数字
+            let result = [];
+            let start = numArr[0];
+            let end = numArr[0];
+            for (let i = 1; i < numArr.length; i++) {
+                if (numArr[i] === end + 1) {
+                    end = numArr[i];
+                } else {
+                    if (start === end) {
+                        result.push(start.toString());
+                    } else {
+                        result.push(`${start}-${end}`);
+                    }
+                    start = numArr[i];
+                    end = numArr[i];
+                }
+            }
+            if (start === end) {
+                result.push(start.toString());
+            } else {
+                result.push(`${start}-${end}`);
+            }
+
+            return result;
+        }
+
+        function calculate() {
+            // 获取输入框中的内容并将其以逗号分隔为数组
+            let inputStr = document.getElementById('lotIdList').value;
+            let inputArr = inputStr.split(',');
+            // 调用 processArray 函数进行处理
+            let result = processArray(inputArr);
+            // 将结果显示在结果 div 中
+            let resultDiv = document.getElementById('resultDiv');
+            resultDiv.innerHTML = result.join(', ');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const links = document.querySelectorAll('.lotIdLink');
+            const lotIdListInput = document.getElementById('lotIdList');
+
+            links.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // 阻止默认的链接跳转行为
+                    lotIdListInput.value = this.textContent; // 提取链接文本中的值
+                });
+            });
+        });
+
+
+
+
+    </script>
+
+    <!-- 引入 Bootstrap JS 和 jQuery 从国内网站 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
